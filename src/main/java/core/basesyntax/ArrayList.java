@@ -10,19 +10,17 @@ public class ArrayList<T> implements List<T> {
         elements = (T[]) new Object[DEFAULT_CAPACITY];
         size = 0;
     }
-    private void grow() {
+    private void ensureCapacity() {
         if (elements.length == size) {
             int newSize = (int) (size * GROWTH_FACTOR);
             T[] newArray = (T[]) new Object[newSize];
-            for (int i = 0; i < size; i++) {
-                newArray[i] = elements[i];
-            }
+            System.arraycopy(elements, 0, newArray, 0, size);
             elements = newArray;
         }
     }
     @Override
     public void add(T value) {
-        grow();
+        ensureCapacity();
         elements[size] = value;
         size++;
     }
@@ -30,7 +28,7 @@ public class ArrayList<T> implements List<T> {
     public void add(T value, int index) {
         if (index < 0 || index > size)
             throw new ArrayListIndexOutOfBoundsException("Invalid index: " + index);
-        grow();
+        ensureCapacity();
         System.arraycopy(elements, index, elements, index + 1, size - index);
         elements[index] = value;
         size++;
